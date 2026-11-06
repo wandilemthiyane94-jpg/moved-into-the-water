@@ -1,0 +1,51 @@
+/* Simulation page v3: one quiet input column, one large view, one timeline. No nested boxes. */
+#sim{position:fixed;left:0;right:0;top:64px;bottom:0;z-index:15;background:#070B12;overflow:auto;color:#E2E8F0;font:14px/1.45 var(--sans)}
+#sim[hidden]{display:none}
+#sim *{box-sizing:border-box}
+#sim button,#sim input{font:inherit;color:inherit}
+#sim :focus-visible{outline:2px solid #FBC900;outline-offset:2px}
+.sv-wrap{max-width:1500px;margin:0 auto;padding:22px 32px 20px;min-height:100%;display:flex;flex-direction:column;gap:20px}
+.sv-k{font:600 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:#F5A524}
+.sv-head h1{margin:8px 0 6px;font:800 clamp(30px,3.4vw,52px)/1 var(--sans);letter-spacing:-.035em;color:#fff}
+.sv-head p{margin:0;color:#9AA6B8;font-size:15px}
+.sv-body{flex:1;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px;min-height:0}
+.sv-in{display:flex;flex-direction:column;gap:26px;padding-top:4px}
+.sv-f{display:grid;gap:8px}
+.sv-f>span{font:600 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#7c879a}
+.sv-v{display:flex;align-items:baseline;gap:8px}
+#sim .sv-v input{width:4.2ch;background:none;border:0;padding:0;font:700 44px/1 var(--sans);letter-spacing:-.03em;color:#fff;outline:none;-moz-appearance:textfield}
+#sim .sv-v input::-webkit-inner-spin-button,#sim .sv-v input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.sv-v em{font-style:normal;color:#7c879a;font-size:15px}
+.sv-f input[type=range]{width:100%;accent-color:#F5A524;margin:0}
+.sv-sc{display:grid;gap:2px}
+.sv-sc button{display:flex;justify-content:space-between;align-items:baseline;background:none;border:0;border-left:2px solid transparent;padding:7px 0 7px 12px;text-align:left;cursor:pointer;color:#cbd5e1;font-size:14px}
+.sv-sc button small{color:#64748B;font-size:12px}
+.sv-sc button:hover{color:#fff}
+.sv-sc button[aria-pressed="true"]{border-left-color:#F5A524;color:#fff;font-weight:600}
+.sv-note{margin:auto 0 0;font-size:11.5px;line-height:1.5;color:#5d6879}
+.sv-stage{position:relative;display:flex;flex-direction:column;gap:14px;min-height:0}
+.sv-stage .sm-view{position:relative;flex:1;min-height:360px;border-radius:20px;overflow:hidden;background:#05080d}
+.sv-stage .sm-view img{width:100%;height:100%;object-fit:cover;display:block}
+.sv-stage .sm-view::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(5,8,13,.5),transparent 25%,transparent 58%,rgba(5,8,13,.85))}
+.sv-time{position:absolute;left:28px;top:22px;z-index:2;color:#fff}
+.sv-time b{display:block;font:700 40px/1 var(--sans);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.sv-time span{font-size:13px;color:#cbd5e1}
+.sv-read{position:absolute;left:28px;bottom:26px;z-index:2;display:flex;gap:44px;color:#fff}
+.sv-read small{display:block;font-size:12.5px;color:#cbd5e1;margin-bottom:4px}
+.sv-read b{font:700 46px/1 var(--sans);letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.sv-read b em{font-style:normal;font-size:16px;font-weight:500;color:#cbd5e1;margin-left:6px}
+.sv-src{position:absolute;right:24px;bottom:22px;z-index:2;font-size:11px;color:rgba(255,255,255,.55)}
+.sv-tl{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:20px;align-items:center}
+.sv-pb{width:44px;height:44px;border-radius:50%;border:0;background:#F5A524;color:#0B0F19!important;font-size:14px;cursor:pointer;display:grid;place-items:center}
+.sv-pb:hover{background:#ffb83d}
+.sm-tl{position:relative;height:56px}
+.sm-bars{position:absolute;left:0;right:0;top:0;height:26px;display:flex;align-items:flex-end;gap:3px}
+.sm-bars i{flex:1;background:#1f3550;border-radius:2px}.sm-bars i.past{background:#4b8fd6}
+.sm-tl input{position:absolute;left:0;right:0;top:24px;width:100%;accent-color:#F5A524;margin:0}
+.sm-ticks{position:absolute;left:0;right:0;top:40px;font:11px var(--mono);color:#64748B}
+.sm-ticks span{position:absolute;transform:translateX(-50%)}
+.sv-so small{display:block;font-size:12px;color:#7c879a}.sv-so b{font:700 22px var(--sans);color:#fff;font-variant-numeric:tabular-nums}
+.sm-model{position:absolute;right:0;bottom:0;width:320px;height:200px;border:0;opacity:0;pointer-events:none}
+@media (max-width:980px){.sv-body{grid-template-columns:1fr}.sv-stage .sm-view{height:420px;flex:none}.sv-read b{font-size:34px}}
+@media (min-width:981px){#sim{overflow:hidden}.sv-wrap{height:100%}.sv-stage .sm-view{min-height:0}}
+.sv-stage .sm-view img{transform:scale(1.1);transform-origin:50% 30%}

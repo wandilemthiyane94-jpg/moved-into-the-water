@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Built for Advocates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* End card for the demo video: who the work is for. The map fades to dark, the camps stay lit, the text arrives. */
+:root{--bg:#0B0F19;--ink:#F8FAFC;--txt:#E2E8F0;--mut:#94A3B8;--dim:#64748B;--site:#FBC900;--amber:#F5A524;
+ --sans:Inter,"Helvetica Neue",Arial,sans-serif;--serif:Newsreader,Georgia,serif;--mono:"IBM Plex Mono",Consolas,monospace;color-scheme:dark}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--txt);font:16px/1.5 var(--sans);overflow:hidden}
+.map{position:fixed;right:0;top:50%;height:118vh;aspect-ratio:1300/1240;transform:translate(8%,-50%)}
+.map img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.sat{opacity:.55;transition:opacity 2.6s ease,filter 2.6s ease}
+.water{opacity:.5;mix-blend-mode:screen;transition:opacity 2.6s ease}
+body.dark .sat{opacity:.12;filter:grayscale(1)}
+body.dark .water{opacity:.16}
+.map::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,rgba(11,15,25,.6) 22%,transparent 50%)}
+.pin{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--site);z-index:2;
+ box-shadow:0 0 12px 3px rgba(251,201,0,.55);animation:glow 3.2s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 22px 7px rgba(251,201,0,.3)}}
+.copy{position:fixed;left:clamp(24px,7vw,120px);top:50%;transform:translateY(-50%);max-width:min(640px,52vw);z-index:3}
+.copy>*{opacity:0;transform:translateY(10px);transition:opacity 1.2s ease,transform 1.2s ease}
+.copy>.on{opacity:1;transform:none}
+.k{font:500 12px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin:0 0 22px}
+h1{margin:0 0 22px;font:800 clamp(34px,4.2vw,64px)/1.04 var(--sans);letter-spacing:-.035em;color:var(--ink)}
+.lede{margin:0 0 30px;font:400 clamp(19px,1.6vw,24px)/1.4 var(--serif);color:var(--txt)}
+.lede em{color:var(--site)}
+.src{margin:0;font-size:13px;color:var(--mut);border-left:2px solid var(--site);padding-left:12px}
+.src i{font-style:italic}
+.foot{position:fixed;left:clamp(24px,7vw,120px);right:24px;bottom:28px;z-index:3;display:flex;gap:20px;flex-wrap:wrap;font:400 12px var(--mono);color:var(--dim);opacity:0;transition:opacity 1.2s ease}
+.foot.on{opacity:1}
+@media (max-width:760px){.copy{max-width:none;right:16px;left:16px}.map{opacity:.5}}
+@media (prefers-reduced-motion:reduce){.copy>*,.foot,.sat,.water{transition:none}.pin{animation:none}}
+</style>
+</head>
+<body>
+<div class="map" aria-hidden="true">
+ <img class="sat" src="../assets/mapanim/sat.jpg" alt="">
+ <img class="water" src="../assets/mapanim/water.png" alt="">
+</div>
+<main class="copy">
+ <p class="k">Who this is for</p>
+ <h1>This evidence is for the people bargaining for better housing.</h1>
+ <p class="lede">Built for Durban’s housing advocates, to press the city to plan temporary shelter <em>with</em> the people it displaces.</p>
+ <p class="src"><i>People’s Plan for the Right to Housing in the Age of Climate Change</i>, Durban Coalition, 2024 · Programme Three, Project 3</p>
+</main>
+<footer class="foot"><span>wandilemthiyane94-jpg.github.io/mde-dataviz/viz-wandile</span><span>Hollie and Wandile</span></footer>
+<script>
+/* Camp positions come from the map animation's own metadata, so the dots sit exactly where the map put them. */
+fetch('../assets/mapanim/meta.json').then(r=>r.json()).then(m=>{
+  const box=document.querySelector('.map');
+  m.pins.forEach(p=>{ const d=document.createElement('i'); d.className='pin'; d.title=p.name;
+    d.style.left=(p.x/m.w*100)+'%'; d.style.top=(p.y/m.h*100)+'%'; box.appendChild(d); });
+}).catch(()=>{});
+/* Sequence: map dims, then each line arrives. ?still shows the final frame at once (for screenshots). */
+const still=location.search.includes('still'), steps=[...document.querySelectorAll('.copy>*'),document.querySelector('.foot')];
+const run=(fn,ms)=>still?fn():setTimeout(fn,ms);
+run(()=>document.body.classList.add('dark'),600);
+steps.forEach((el,i)=>run(()=>el.classList.add('on'),1600+i*1100));
+</script>
+</body>
