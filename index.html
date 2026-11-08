@@ -209,7 +209,7 @@ details.acc summary:after{content:"+";color:var(--mut);font-weight:400}
 details.acc[open] summary:after{content:"−"}
 .rep{display:grid;gap:12px}
 .rep label{display:grid;gap:4px;font-size:12.5px;color:var(--txt)}
-.rep select,.rep input[type=number],.rep textarea{font:14px var(--sans);color:var(--ink);background:#0B0F19;border:1px solid var(--line);border-radius:6px;padding:8px}
+.rep select,.rep input[type=number],.rep input[type=text],.rep input[type=tel],.rep textarea{font:14px var(--sans);color:var(--ink);background:#0B0F19;border:1px solid var(--line);border-radius:6px;padding:8px}
 .rep textarea{min-height:84px;resize:vertical}
 .rep .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .rep .chk{grid-template-columns:18px 1fr;align-items:start;font-size:12px;color:var(--mut)}
@@ -700,34 +700,38 @@ function startArc(){ clearInterval(arcTimer); const im=$('arcimg'); if(!im) retu
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){ im.src=ARCF[20]; return; } let k=0;
   arcTimer=setInterval(()=>{ const el=$('arcimg'); if(!el){clearInterval(arcTimer);return;} k=(k+1)%(ARCN+6); const f=Math.min(k,ARCN-1); el.src=ARCF[f]; $('arct').textContent='hour '+Math.round(f/(ARCN-1)*25); },160); }
 
-/* Community reports. On the public site they go to Formspree (MITW.form), which emails the project team.
-   On claude.ai they go to the artifact's database. With neither, they stay on the device.
-   MITW.wa = WhatsApp number in international format, digits only (e.g. '27821234567').
-   MITW.waLive = true only once ethics approval is in place; until then the QR shows "opens soon". */
-window.MITW={ form:'', wa:'', waLive:false };
+/* Community reports. On the public site they go to a Google Form (MITW.gform), whose responses land in a Google Sheet.
+   gform.url = the form's .../formResponse address; gform.ids maps each field to its Google "entry.NNN" number.
+   Google does not tell the page whether a submission arrived (no-cors), so check the Sheet.
+   On claude.ai they go to the artifact's database. With neither, they stay on the device. */
+window.MITW={ gform:{ url:'', ids:{ site_name:'', water:'', san:'', power:'', safe:'', crowd:'', flood:'', year:'', moves:'', text:'', consent:'', name:'', phone:'', contact:'' } } };
 const RATE=[['','Choose'],['ok','Fine'],['some','Some problems'],['bad','Bad'],['none','None at all'],['dk','Don\'t know']];
 const rsel=(id,lab)=>'<label>'+lab+'<select id="'+id+'">'+RATE.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join('')+'</select></label>';
 function reportHTML(){
-  return '<div class="kick">Report</div><h2 style="margin-top:6px">Tell us about your site</h2><p class="sub">Live in a temporary relocation site? Report what conditions are like. Do not write your name or anyone else\'s. Reports are reviewed before anything appears on the map.</p>'+
+  return '<div class="kick">Report</div><h2 style="margin-top:6px">Tell us about your site</h2><p class="sub">Live in a temporary relocation site? Report what conditions are like. Your name and number are optional and are never shown. Reports are reviewed before anything appears on the map.</p>'+
   '<form class="rep" id="rep"><label>Your site<select id="r_site" required><option value="">Choose your site</option><optgroup label="Mapped sites">'+SITES.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join('')+'</optgroup><optgroup label="Other TRAs">'+OTHER_TRA.map(o=>'<option value="tra'+o.id+'">'+esc(o.name)+'</option>').join('')+'</optgroup><option value="other">Not listed</option></select></label>'+
   '<div class="two">'+rsel('r_water','Water')+rsel('r_san','Toilets and washing')+rsel('r_power','Electricity')+rsel('r_safe','Safety')+rsel('r_crowd','Space and crowding')+
   '<label>Has it flooded since you arrived?<select id="r_flood"><option value="">Choose</option><option value="yes">Yes</option><option value="no">No</option><option value="dk">Don\'t know</option></select></label></div>'+
   '<div class="two"><label>Year you arrived<input type="number" id="r_year" min="1990" max="2026" placeholder="e.g. 2022"></label><label>Times your household has been moved<input type="number" id="r_moves" min="0" max="20" placeholder="e.g. 3"></label></div>'+
-  '<label>Anything else (no names, please)<textarea id="r_text" maxlength="1000"></textarea></label>'+
+  '<label>Anything else (please don\'t name other people)<textarea id="r_text" maxlength="1000"></textarea></label>'+
+  '<div class="two"><label>Your name (optional)<input type="text" id="r_name" maxlength="80" autocomplete="name"></label><label>Phone or WhatsApp number (optional)<input type="tel" id="r_phone" maxlength="20" autocomplete="tel" placeholder="e.g. 082 123 4567"></label></div>'+
+  '<label class="chk"><input type="checkbox" id="r_contact"><span>A researcher may call or message me about this report.</span></label>'+
   '<input type="text" name="_gotcha" id="r_hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">'+
-  '<label class="chk"><input type="checkbox" id="r_ok" required><span>I agree that Hollie and Wandile may use this report, without any names, in this research project.</span></label>'+
+  '<label class="chk"><input type="checkbox" id="r_ok" required><span>I agree that Hollie and Wandile may use this report in this research project. My name and number stay private with the research team and are never shown on the map or shared.</span></label>'+
   '<button class="cta" type="submit" style="justify-self:start">Send report</button><p class="msg" id="r_msg" aria-live="polite"></p></form>'; }
 let DB=null, ME=null;
 (async()=>{ try{ if(window.claude&&claude.use){ DB=await claude.use('db'); const u=await claude.use('user'); if(u) ME=await u.id(); } }catch(e){ DB=null; } })();
 async function sendReport(e){ e.preventDefault(); const g=id=>$(id).value, msg=$('r_msg'), btn=e.target.querySelector('button[type=submit]');
   const rec={site:g('r_site'),water:g('r_water'),san:g('r_san'),power:g('r_power'),safe:g('r_safe'),crowd:g('r_crowd'),flood:g('r_flood'),
-    year:g('r_year')?+g('r_year'):null,moves:g('r_moves')?+g('r_moves'):null,text:g('r_text').slice(0,1000),t:Date.now(),status:'new'};
+    year:g('r_year')?+g('r_year'):null,moves:g('r_moves')?+g('r_moves'):null,text:g('r_text').slice(0,1000),name:g('r_name').trim(),phone:g('r_phone').trim(),contact:$('r_contact').checked?'yes':'no',t:Date.now(),status:'new'};
   if(!rec.site){ msg.className='msg'; msg.textContent='Please choose your site.'; return; }
   btn.disabled=true; msg.className='msg'; msg.textContent='Sending…';
-  if(MITW.form){ const sel=$('r_site'); rec.site_name=sel.options[sel.selectedIndex].text;
-    try{ const r=await fetch(MITW.form,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-        body:JSON.stringify(Object.assign({_subject:'New site report: '+rec.site_name,_gotcha:$('r_hp').value,sent:new Date(rec.t).toISOString()},rec))});
-      if(!r.ok) throw new Error('status '+r.status);
+  const G=MITW.gform; if(G&&G.url){ if($('r_hp').value){ msg.className='msg ok'; msg.textContent='Thank you.'; btn.disabled=false; return; }
+    const txt=id=>{ const el=$(id), o=el.options[el.selectedIndex]; return o&&o.value?o.text:''; };
+    const v={site_name:txt('r_site'),water:txt('r_water'),san:txt('r_san'),power:txt('r_power'),safe:txt('r_safe'),crowd:txt('r_crowd'),flood:txt('r_flood'),
+      year:rec.year==null?'':rec.year,moves:rec.moves==null?'':rec.moves,text:rec.text,consent:'yes',name:rec.name,phone:rec.phone,contact:rec.contact};
+    const body=new URLSearchParams(); for(const k in v) if(G.ids[k]&&v[k]!=='') body.append('entry.'+G.ids[k],v[k]);
+    try{ await fetch(G.url,{method:'POST',mode:'no-cors',body});
       msg.className='msg ok'; msg.textContent='Thank you. Your report was sent and will be reviewed before it appears.'; e.target.reset(); }
     catch(err){ msg.className='msg'; msg.textContent='Could not send just now. Please check your connection and try again.'; }
     btn.disabled=false; return; }
