@@ -704,7 +704,9 @@ function startArc(){ clearInterval(arcTimer); const im=$('arcimg'); if(!im) retu
    gform.url = the form's .../formResponse address; gform.ids maps each field to its Google "entry.NNN" number.
    Google does not tell the page whether a submission arrived (no-cors), so check the Sheet.
    On claude.ai they go to the artifact's database. With neither, they stay on the device. */
-window.MITW={ gform:{ url:'', ids:{ site_name:'', water:'', san:'', power:'', safe:'', crowd:'', flood:'', year:'', moves:'', text:'', consent:'', name:'', phone:'', contact:'' } } };
+window.MITW={ gform:{ url:'https://docs.google.com/forms/d/e/1FAIpQLScEsmENP8INfMni-JIKS1AqtLIUTi3Dimy4MynHZANEP2aVSA/formResponse',
+  ids:{ site_name:'775839627', water:'2135865792', san:'1231279178', power:'853163051', safe:'936440637', crowd:'533617346', flood:'270531851',
+        year:'172123158', moves:'1732812214', text:'764986564', consent:'1172980499', name:'1193314566', phone:'307885479', contact:'1560028517' } } };
 const RATE=[['','Choose'],['ok','Fine'],['some','Some problems'],['bad','Bad'],['none','None at all'],['dk','Don\'t know']];
 const rsel=(id,lab)=>'<label>'+lab+'<select id="'+id+'">'+RATE.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join('')+'</select></label>';
 function reportHTML(){
