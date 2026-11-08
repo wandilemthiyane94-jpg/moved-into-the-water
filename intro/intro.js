@@ -3,7 +3,7 @@
    The drawn family stands for families of the Gwala Street camp (moves: GroundUp, June 2022).
    The loss slide names Lulama Dingiswayo, whose three children died at that camp (IOL; Amnesty International, 2025). */
 (function(){
-if (window.INTRO_ON === false || location.hash === '#map' || location.hash === '#stories' || location.hash === '#report' || location.hash === '#return' || location.hash === '#simulation') return;
+if (window.INTRO_ON === false || location.hash === '#map' || location.hash === '#stories' || location.hash === '#report' || location.hash === '#return' || location.hash === '#simulation' || location.hash === '#conditions') return;
 const BASE='intro/', FPS=5.5, NF=244, fr=i=>BASE+'film8/f'+String(i).padStart(3,'0')+'.jpg';
 const PTS={bg_drop:{mega:[50.02,50.06]},bg_mapA:{mega:[28.65,58.08],tehuis:[48.72,58.08],lamont:[71.44,34.08]},bg_mapB:{lamont:[42.31,62.08],bayside:[57.77,30.08],umbilo:[49.26,40.42]},bg_flood:{mega:[29.63,82.5],tehuis:[35.67,82.5],lamont:[42.5,75.29],bayside:[70.43,17.5],umbilo:[55.05,36.16]}};
 const PIN='<svg viewBox="0 0 56 70" aria-hidden="true"><path d="M28 68C28 68 4 42 4 26a24 24 0 0148 0c0 16-24 42-24 42z" fill="#FBC900"/><circle cx="21" cy="19" r="4" fill="#0B0F19"/><circle cx="35" cy="19" r="4" fill="#0B0F19"/><circle cx="28" cy="31" r="3" fill="#0B0F19"/><path d="M14 38v-6a7 7 0 0114 0v6zM28 38v-6a7 7 0 0114 0v6z" fill="#0B0F19"/><path d="M23 44v-4a5 5 0 0110 0v4z" fill="#0B0F19"/></svg>';

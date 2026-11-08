@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="news/news.css"><!-- Stories page -->
 <link rel="stylesheet" href="report/report.css"><!-- Report page -->
 <link rel="stylesheet" href="sim/sim.css"><!-- Simulation page -->
+<link rel="stylesheet" href="cond/cond.css"><!-- Conditions page -->
 <style>
 /* Landing = the map. Nav on top, hero + layers on the left, the site dossier on the right, time along the bottom.
    Built on Hollie's map engine (data/sites.js, data/map-data.js). Single dark look by design. */
@@ -982,7 +983,7 @@ q.addEventListener('input',()=>{ const v=q.value.trim().toLowerCase(); if(!v){re
   PLACES.filter(p=>p[0].toLowerCase().includes(v)).forEach(p=>items.push([p[0],'place',()=>flyTo(p.X,p.Y,13.2)]));
   if(/flood/.test(v)) items.push(['Sites that flooded: Lamontville riverside camp, 2022 and 2025','answer',()=>select('lamontville',true)]);
   if(/famil|journey|moved/.test(v)) items.push(['From uMlazi to Umbilo: four moves in six years','journey',()=>{select('lamontville',true);setTimeout(()=>{tab='movement';toggleJourney();},950);}]);
-  if(/water|toilet|sanit|condition/.test(v)) items.push(['Conditions at every site','view',()=>{view2='conditions';setNav();panel();condFly();}]);
+  if(/water|toilet|sanit|condition/.test(v)) items.push(['Conditions at every site','view',()=>{view2='conditions';setNav();panel();condFly();if(window.openConditions)openConditions();}]);
   if(/about|project|data|method/.test(v)) items.push(['About this project','page',()=>{view2='about';setNav();panel();}]);
   if(/report|tell|complain/.test(v)) items.push(['Report conditions at your site','form',()=>{view2='report';setNav();panel();}]);
   res.innerHTML=items.length?items.slice(0,7).map((it,i)=>'<button data-i="'+i+'">'+esc(it[0])+'<small>'+it[1]+'</small></button>').join(''):'<button disabled>No match yet<small>try a site name</small></button>';
@@ -1031,6 +1032,7 @@ setYear(2026,true); attr(); panel(); resize(); view.z=homeZoom(); draw();
 <script src="news/news.js"></script>
 <script src="report/report.js"></script>
 <script src="sim/sim.js"></script>
+<script src="cond/cond.js"></script><!-- Conditions page -->
 <script>/* icons for the phone tab bar (hidden on wider screens) */
 (function(){ const S=d=>'<span class="ni" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg></span>';
   const IC={map:'<path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5z"/><path d="M9 4v13M15 6.5v13"/>',
